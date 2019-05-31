@@ -29,13 +29,14 @@ public class ParserDataService implements IParserDataService {
 
         for (String line : lines) {
             String[] inputLine = line.split(WHITE_SPACE);
+            validator.validateLine(inputLine);
             final String player = inputLine[0];
             final String value = inputLine[1];
             validator.validateScore(value);
             if (!shotsPerPlayer.containsKey(player)) {
-                List<String> a = new ArrayList<>();
-                a.add(value);
-                shotsPerPlayer.put(player, a);
+                List<String> firstValue = new ArrayList<>();
+                firstValue.add(value);
+                shotsPerPlayer.put(player, firstValue);
             } else {
                 shotsPerPlayer.get(player).add(value);
             }

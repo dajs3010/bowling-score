@@ -3,8 +3,10 @@ package com.jobsity.challenge;
 import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.PlayerInputValues;
 import com.jobsity.challenge.service.IBowlingScoreService;
+import com.jobsity.challenge.service.IFileReaderService;
 import com.jobsity.challenge.service.IParserDataService;
 import com.jobsity.challenge.service.impl.BowlingScoreService;
+import com.jobsity.challenge.service.impl.FileReaderService;
 import com.jobsity.challenge.service.impl.ParserDataService;
 import com.jobsity.challenge.utils.Errors;
 import org.springframework.boot.SpringApplication;
@@ -12,16 +14,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class App {
 
     private IBowlingScoreService bowlingScoreService;
     private IParserDataService parserDataService;
+    private IFileReaderService fileReaderService;
 
     public static void main(String[] args) {
         try {
@@ -31,8 +31,9 @@ public class App {
 
             BowlingScoreService bowlingScoreService = (BowlingScoreService) ctx.getBean("bowlingScoreService");
             ParserDataService parserDataService = (ParserDataService) ctx.getBean("parserDataService");
+            FileReaderService fileReaderService = (FileReaderService) ctx.getBean("fileReaderService");
 
-            final List<String> lines = Files.lines(Paths.get(fileName)).collect(Collectors.toList());
+            final List<String> lines = fileReaderService.readFile(fileName);
 
             final List<PlayerInputValues> playersShots = parserDataService.getPlayersInputValues(lines);
 

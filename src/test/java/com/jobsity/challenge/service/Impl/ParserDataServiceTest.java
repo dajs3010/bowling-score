@@ -6,7 +6,9 @@ import com.jobsity.challenge.service.IValidator;
 import com.jobsity.challenge.service.impl.ParserDataService;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -27,6 +29,9 @@ public class ParserDataServiceTest {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void getGroupedShots_inputStreamOfLines_returnGroupedScore() throws InvalidScoreException {
@@ -77,31 +82,30 @@ public class ParserDataServiceTest {
                 );
 
         final List<PlayerInputValues> playersShots = parserDataService.getPlayersInputValues(lines);
-
-        for (int i = 0; i < expectedPlayerShots.size(); i++) {
-            Assert.assertEquals(expectedPlayerShots.get(i).getInputValues(), playersShots.get(i).getInputValues());
-            Assert.assertEquals(expectedPlayerShots.get(i).getPlayer(), playersShots.get(i).getPlayer());
-        }
+        Assert.assertEquals(expectedPlayerShots, playersShots);
     }
 
-    @Test(expected = InvalidScoreException.class)
+    @Test
     public void getGroupedShots_whenAnInputHasALetterInValue_throwInvalidScoreException() throws InvalidScoreException {
         List<String> lines = Arrays.asList("Jeff A", "John 10");
         Mockito.doThrow(InvalidScoreException.class).when(validator).validateScore("A");
+        expectedException.expect(InvalidScoreException.class);
         parserDataService.getPlayersInputValues(lines);
     }
 
-    @Test(expected = InvalidScoreException.class)
+    @Test
     public void getGroupedShots_whenAnInputHasANegativeNumberInValue_throwInvalidScoreException() throws InvalidScoreException {
         List<String> lines = Arrays.asList("Jeff -5", "John 10");
         Mockito.doThrow(InvalidScoreException.class).when(validator).validateScore("-5");
+        expectedException.expect(InvalidScoreException.class);
         parserDataService.getPlayersInputValues(lines);
     }
 
-    @Test(expected = InvalidScoreException.class)
+    @Test
     public void getGroupedShots_whenAnInputHasANumberOutOfRangeInValue_throwInvalidScoreException() throws InvalidScoreException {
         List<String> lines = Arrays.asList("Jeff 11", "John 10");
         Mockito.doThrow(InvalidScoreException.class).when(validator).validateScore("11");
+        expectedException.expect(InvalidScoreException.class);
         parserDataService.getPlayersInputValues(lines);
     }
 

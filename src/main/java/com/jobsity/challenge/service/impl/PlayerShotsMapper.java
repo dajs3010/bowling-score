@@ -45,11 +45,11 @@ public class PlayerShotsMapper implements IPlayerShotsMapper {
                     Shot first = lastFrameShotsService.getLastFrameFirstShot(actual);
                     Shot second = lastFrameShotsService.getLastFrameSecondShot(actual, next, first);
                     List<Shot> lastShots = new ArrayList<>(Arrays.asList(first, second));
-                    if (!afterNext.equals(Constants.EMPTY)) {
+                    if (!Constants.EMPTY.equals(afterNext)) {
                         lastShots.add(lastFrameShotsService.getLastFrameLastShot(afterNext, next, second));
                     }
                     inputShots.add(lastShots);
-                } else if (actual.equals(Constants.MAX_PINFALL_STRING)) {
+                } else if (Constants.MAX_PINFALL_STRING.equals(actual)) {
                     inputShots.add(Arrays.asList(Shot.createStrike(),
                             Shot.createShot(next),
                             Shot.createShot(afterNext)));

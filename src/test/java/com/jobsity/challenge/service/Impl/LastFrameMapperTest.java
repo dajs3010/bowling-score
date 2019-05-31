@@ -28,25 +28,28 @@ public class LastFrameMapperTest {
     @Test
     public void getLastFrameFirstShot_valueIsMaxPinFalls_returnStrikeShot() {
         String value = "10";
+        Integer expectedValue = 10;
         final Shot lastFrameFirstShot = lastFrameMapper.getLastFrameFirstShot(value);
         Assert.assertEquals(Shot.createStrike().getScoreType(), lastFrameFirstShot.getScoreType());
-        Assert.assertEquals(Shot.createStrike().getValue(), lastFrameFirstShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameFirstShot.getValue());
     }
 
     @Test
     public void getLastFrameFirstShot_valueIsNotMaxPinFalls_returnNumberShot() {
         String value = "5";
+        Integer expectedValue = 5;
         final Shot lastFrameFirstShot = lastFrameMapper.getLastFrameFirstShot(value);
         Assert.assertEquals(Shot.createShot(value).getScoreType(), lastFrameFirstShot.getScoreType());
-        Assert.assertEquals(Shot.createShot(value).getValue(), lastFrameFirstShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameFirstShot.getValue());
     }
 
     @Test
     public void getLastFrameFirstShot_valueIsFoul_returnFoulShot() {
         String value = "F";
+        Integer expectedValue = 0;
         final Shot lastFrameFirstShot = lastFrameMapper.getLastFrameFirstShot(value);
         Assert.assertEquals(Shot.createFoul().getScoreType(), lastFrameFirstShot.getScoreType());
-        Assert.assertEquals(Shot.createFoul().getValue(), lastFrameFirstShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameFirstShot.getValue());
     }
 
     @Test
@@ -54,9 +57,10 @@ public class LastFrameMapperTest {
         String actual = "10";
         String next = "10";
         Shot firstShot = Shot.createStrike();
+        Integer expectedValue = 10;
         final Shot lastFrameSecondShot = lastFrameMapper.getLastFrameSecondShot(actual, next, firstShot);
         Assert.assertEquals(Shot.createStrike().getScoreType(), lastFrameSecondShot.getScoreType());
-        Assert.assertEquals(Shot.createStrike().getValue(), lastFrameSecondShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameSecondShot.getValue());
     }
 
     @Test
@@ -64,10 +68,11 @@ public class LastFrameMapperTest {
         String actual = "7";
         String next = "3";
         Shot firstShot = Shot.createFoul();
+        Integer expectedValue = 3;
         Mockito.when(validator.isSpare(actual, next)).thenReturn(true);
         final Shot lastFrameSecondShot = lastFrameMapper.getLastFrameSecondShot(actual, next, firstShot);
         Assert.assertEquals(Shot.createSpare(next).getScoreType(), lastFrameSecondShot.getScoreType());
-        Assert.assertEquals(Shot.createSpare(next).getValue(), lastFrameSecondShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameSecondShot.getValue());
     }
 
     @Test
@@ -75,10 +80,11 @@ public class LastFrameMapperTest {
         String actual = "7";
         String next = "2";
         Shot firstShot = Shot.createFoul();
+        Integer expectedValue = 2;
         Mockito.when(validator.isSpare(actual, next)).thenReturn(false);
         final Shot lastFrameSecondShot = lastFrameMapper.getLastFrameSecondShot(actual, next, firstShot);
         Assert.assertEquals(Shot.createShot(next).getScoreType(), lastFrameSecondShot.getScoreType());
-        Assert.assertEquals(Shot.createShot(next).getValue(), lastFrameSecondShot.getValue());
+        Assert.assertEquals(expectedValue, lastFrameSecondShot.getValue());
     }
 
     @Test
@@ -86,9 +92,10 @@ public class LastFrameMapperTest {
         String next = "2";
         String afterNext = "10";
         Shot second = Shot.createStrike();
+        Integer expectedValue = 10;
         final Shot lastFrameLastShot2 = lastFrameMapper.getLastFrameLastShot(afterNext, next, second);
         Assert.assertEquals(Shot.createStrike().getScoreType(), lastFrameLastShot2.getScoreType());
-        Assert.assertEquals(Shot.createStrike().getValue(), lastFrameLastShot2.getValue());
+        Assert.assertEquals(expectedValue, lastFrameLastShot2.getValue());
     }
 
     @Test
@@ -96,9 +103,10 @@ public class LastFrameMapperTest {
         String next = "2";
         String afterNext = "10";
         Shot second = Shot.createSpare(next);
+        Integer expectedValue = 10;
         final Shot lastFrameLastShot2 = lastFrameMapper.getLastFrameLastShot(afterNext, next, second);
         Assert.assertEquals(Shot.createStrike().getScoreType(), lastFrameLastShot2.getScoreType());
-        Assert.assertEquals(Shot.createStrike().getValue(), lastFrameLastShot2.getValue());
+        Assert.assertEquals(expectedValue, lastFrameLastShot2.getValue());
     }
 
     @Test
@@ -106,10 +114,11 @@ public class LastFrameMapperTest {
         String next = "1";
         String afterNext = "9";
         Shot second = Shot.createShot("1");
+        Integer expectedValue = 9;
         Mockito.when(validator.isSpare(afterNext, next)).thenReturn(true);
         final Shot lastFrameLastShot2 = lastFrameMapper.getLastFrameLastShot(afterNext, next, second);
         Assert.assertEquals(Shot.createSpare("9").getScoreType(), lastFrameLastShot2.getScoreType());
-        Assert.assertEquals(Shot.createSpare("9").getValue(), lastFrameLastShot2.getValue());
+        Assert.assertEquals(expectedValue, lastFrameLastShot2.getValue());
     }
 
     @Test
@@ -117,10 +126,11 @@ public class LastFrameMapperTest {
         String next = "10";
         String afterNext = "9";
         Shot second = Shot.createStrike();
+        Integer expectedValue = 9;
         Mockito.when(validator.isSpare(afterNext, next)).thenReturn(true);
         final Shot lastFrameLastShot2 = lastFrameMapper.getLastFrameLastShot(afterNext, next, second);
         Assert.assertEquals(Shot.createShot("9").getScoreType(), lastFrameLastShot2.getScoreType());
-        Assert.assertEquals(Shot.createShot("9").getValue(), lastFrameLastShot2.getValue());
+        Assert.assertEquals(expectedValue, lastFrameLastShot2.getValue());
     }
 
     @Test
@@ -128,10 +138,11 @@ public class LastFrameMapperTest {
         String next = "9";
         String afterNext = "9";
         Shot second = Shot.createShot("9");
+        Integer expectedValue = 9;
         Mockito.when(validator.isSpare(afterNext, next)).thenReturn(false);
         final Shot lastFrameLastShot2 = lastFrameMapper.getLastFrameLastShot(afterNext, next, second);
         Assert.assertEquals(ShotType.NUMBER, lastFrameLastShot2.getScoreType());
-        Assert.assertEquals(Shot.createShot("9").getValue(), lastFrameLastShot2.getValue());
+        Assert.assertEquals(expectedValue, lastFrameLastShot2.getValue());
     }
 
 }

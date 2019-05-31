@@ -16,14 +16,14 @@ public class LastFrameMapper implements ILastFrameMapper {
     }
 
     public Shot getLastFrameFirstShot(String value) {
-        if (value.equals(Constants.MAX_PINFALL_STRING)) {
+        if (Constants.MAX_PINFALL_STRING.equals(value)) {
             return Shot.createStrike();
         }
         return Shot.createShot(value);
     }
 
     public Shot getLastFrameSecondShot(String actual, String next, Shot first) {
-        if (next.equals(Constants.MAX_PINFALL_STRING) && first.isStrike()) {
+        if (Constants.MAX_PINFALL_STRING.equals(next) && first.isStrike()) {
             return Shot.createStrike();
         } else if (!first.isStrike() && validator.isSpare(actual, next)) {
             return Shot.createSpare(next);
@@ -34,7 +34,7 @@ public class LastFrameMapper implements ILastFrameMapper {
     public Shot getLastFrameLastShot(String afterNext, String next, Shot second) {
         if (validator.isSpare(afterNext, next) && !second.isSpare() && !second.isStrike()) {
             return Shot.createSpare(afterNext);
-        } else if (afterNext.equals(Constants.MAX_PINFALL_STRING) && (second.isSpare() || second.isStrike())) {
+        } else if (Constants.MAX_PINFALL_STRING.equals(afterNext) && (second.isSpare() || second.isStrike())) {
             return Shot.createStrike();
         } else {
             return Shot.createShot(afterNext);

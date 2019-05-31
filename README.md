@@ -2,10 +2,13 @@ To compile the project you should run this command in the root project directory
 
 mvn package
 
-To run the project you must go to the target folder and execute:
+To run the project you must execute:
+java -jar target/bowling-score-1.0-SNAPSHOT.jar <file path argument>
+E.g:
+java -jar target/bowling-score-1.0-SNAPSHOT.jar ./scores/score.txt
 
+Or execute:
 mvn spring-boot:run -Dspring-boot.run.arguments=<file path argument>
-
 E.g:
 mvn spring-boot:run -Dspring-boot.run.arguments=./scores/score.txt
 
