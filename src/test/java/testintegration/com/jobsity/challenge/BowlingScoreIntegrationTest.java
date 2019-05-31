@@ -1,5 +1,6 @@
-package com.jobsity.challenge;
+package testintegration.com.jobsity.challenge;
 
+import com.jobsity.challenge.App;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +59,6 @@ public class BowlingScoreIntegrationTest {
     @Test
     public void calculateWorstScore() {
         final String[] strings = {WORST_SCORE_FILE};
-        App.main(strings);
         String expectedWorstPinFalls = "Pinfalls\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0";
         String expectedWorstScore = "Score\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0\t\t0";
         App.main(strings);
