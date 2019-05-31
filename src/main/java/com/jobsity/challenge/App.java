@@ -9,6 +9,7 @@ import com.jobsity.challenge.service.impl.BowlingScoreService;
 import com.jobsity.challenge.service.impl.FileReaderService;
 import com.jobsity.challenge.service.impl.ParserDataService;
 import com.jobsity.challenge.utils.Errors;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

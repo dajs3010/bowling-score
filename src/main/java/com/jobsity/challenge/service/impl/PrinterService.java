@@ -13,7 +13,7 @@ import static com.jobsity.challenge.model.type.ShotType.NUMBER;
 public class PrinterService implements IPrinterService {
 
     public void printResults(final List<FramesResult> framesResults) {
-        System.out.println("\nFramePinFalls\t1\t\t2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8\t\t9\t\t10");
+        System.out.println("\nFrame\t\t1\t\t2\t\t3\t\t4\t\t5\t\t6\t\t7\t\t8\t\t9\t\t10");
         framesResults.forEach(framesResult -> {
             final List<Integer> score = framesResult.getScore();
             final FramePinFalls framePinfalls = framesResult.getFramePinfalls();
