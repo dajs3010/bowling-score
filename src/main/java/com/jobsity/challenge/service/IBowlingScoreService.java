@@ -1,11 +1,12 @@
 package com.jobsity.challenge.service;
 
+import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.PlayerInputValues;
 
 import java.util.List;
 
 public interface IBowlingScoreService {
 
-    void calculateScore(final List<PlayerInputValues> playersShots);
+    void calculateScore(final List<PlayerInputValues> playersShots) throws BowlingScoreException;
 
 }

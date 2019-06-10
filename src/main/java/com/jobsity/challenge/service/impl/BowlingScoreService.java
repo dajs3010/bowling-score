@@ -1,5 +1,6 @@
 package com.jobsity.challenge.service.impl;
 
+import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.FramesResult;
 import com.jobsity.challenge.model.PlayerInputValues;
 import com.jobsity.challenge.model.PlayerShots;
@@ -25,7 +26,7 @@ public class BowlingScoreService implements IBowlingScoreService {
         this.playerShotsMapper = playerShotsMapper;
     }
 
-    public void calculateScore(final List<PlayerInputValues> playerInputValues) {
+    public void calculateScore(final List<PlayerInputValues> playerInputValues) throws BowlingScoreException {
 
         final List<PlayerShots> playersShots = playerShotsMapper.mapPlayerShots(playerInputValues);
 

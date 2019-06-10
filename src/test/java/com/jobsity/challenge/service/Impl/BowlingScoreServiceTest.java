@@ -1,5 +1,6 @@
 package com.jobsity.challenge.service.Impl;
 
+import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.PlayerInputValues;
 import com.jobsity.challenge.model.PlayerShots;
 import com.jobsity.challenge.model.Shot;
@@ -36,7 +37,7 @@ public class BowlingScoreServiceTest {
     private final static String PLAYER = "PLAYER";
 
     @Test
-    public void calculateScore_executeCalculateScoreAndPrintResults() {
+    public void calculateScore_executeCalculateScoreAndPrintResults() throws BowlingScoreException {
 
         final List<PlayerInputValues> playerInputValues =
                 Arrays.asList(

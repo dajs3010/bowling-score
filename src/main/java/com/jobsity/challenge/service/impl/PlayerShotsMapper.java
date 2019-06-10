@@ -1,5 +1,6 @@
 package com.jobsity.challenge.service.impl;
 
+import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.PlayerInputValues;
 import com.jobsity.challenge.model.PlayerShots;
 import com.jobsity.challenge.model.Shot;
@@ -14,6 +15,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.jobsity.challenge.utils.Errors.FRAME_NUMBER_ERROR;
+
 @Service
 public class PlayerShotsMapper implements IPlayerShotsMapper {
 
@@ -25,51 +28,55 @@ public class PlayerShotsMapper implements IPlayerShotsMapper {
         this.validator = validator;
     }
 
-    public List<PlayerShots> mapPlayerShots(List<PlayerInputValues> playerInputValues) {
+    public List<PlayerShots> mapPlayerShots(List<PlayerInputValues> playerInputValues) throws BowlingScoreException {
 
-        return playerInputValues.stream().map(inputValue -> {
-            int shotIndex = 0;
-            int resultIndex = 1;
+        try {
+            return playerInputValues.stream().map(inputValue -> {
+                int shotIndex = 0;
+                int resultIndex = 1;
 
-            List<List<Shot>> inputShots = new ArrayList<>();
+                List<List<Shot>> inputShots = new ArrayList<>();
 
-            do {
-                List<String> inputValues = inputValue.getInputValues();
+                do {
+                    List<String> inputValues = inputValue.getInputValues();
 
-                String actual = inputValues.get(shotIndex);
-                String next = inputValues.get(shotIndex + 1);
-                String afterNext = shotIndex + 2 < inputValues.size() ?
-                        inputValues.get(shotIndex + 2) : Constants.EMPTY;
+                    String actual = inputValues.get(shotIndex);
+                    String next = inputValues.get(shotIndex + 1);
+                    String afterNext = shotIndex + 2 < inputValues.size() ?
+                            inputValues.get(shotIndex + 2) : Constants.EMPTY;
 
-                if (resultIndex == Constants.TOTAL_FRAMES) {
-                    Shot first = lastFrameShotsService.getLastFrameFirstShot(actual);
-                    Shot second = lastFrameShotsService.getLastFrameSecondShot(actual, next, first);
-                    List<Shot> lastShots = new ArrayList<>(Arrays.asList(first, second));
-                    if (!Constants.EMPTY.equals(afterNext)) {
-                        lastShots.add(lastFrameShotsService.getLastFrameLastShot(afterNext, next, second));
+                    if (resultIndex == Constants.TOTAL_FRAMES) {
+                        Shot first = lastFrameShotsService.getLastFrameFirstShot(actual);
+                        Shot second = lastFrameShotsService.getLastFrameSecondShot(actual, next, first);
+                        List<Shot> lastShots = new ArrayList<>(Arrays.asList(first, second));
+                        if (!Constants.EMPTY.equals(afterNext)) {
+                            lastShots.add(lastFrameShotsService.getLastFrameLastShot(afterNext, next, second));
+                        }
+                        inputShots.add(lastShots);
+                    } else if (Constants.MAX_PINFALL_STRING.equals(actual)) {
+                        inputShots.add(Arrays.asList(Shot.createStrike(),
+                                Shot.createShot(next),
+                                Shot.createShot(afterNext)));
+                        shotIndex++;
+                    } else if (validator.isSpare(actual, next)) {
+                        inputShots.add(Arrays.asList(Shot.createShot(actual),
+                                Shot.createSpare(next),
+                                Shot.createShot(afterNext)));
+                        shotIndex += 2;
+                    } else {
+                        inputShots.add(Arrays.asList(Shot.createShot(actual),
+                                Shot.createShot(next)));
+                        shotIndex += 2;
                     }
-                    inputShots.add(lastShots);
-                } else if (Constants.MAX_PINFALL_STRING.equals(actual)) {
-                    inputShots.add(Arrays.asList(Shot.createStrike(),
-                            Shot.createShot(next),
-                            Shot.createShot(afterNext)));
-                    shotIndex++;
-                } else if (validator.isSpare(actual, next)) {
-                    inputShots.add(Arrays.asList(Shot.createShot(actual),
-                            Shot.createSpare(next),
-                            Shot.createShot(afterNext)));
-                    shotIndex += 2;
-                } else {
-                    inputShots.add(Arrays.asList(Shot.createShot(actual),
-                            Shot.createShot(next)));
-                    shotIndex += 2;
-                }
-                resultIndex++;
-            } while (resultIndex <= Constants.TOTAL_FRAMES);
+                    resultIndex++;
+                } while (resultIndex <= Constants.TOTAL_FRAMES);
 
-            return PlayerShots.createPlayerInputShots(inputValue.getPlayer(), inputShots);
+                return PlayerShots.createPlayerInputShots(inputValue.getPlayer(), inputShots);
 
-        }).collect(Collectors.toList());
+            }).collect(Collectors.toList());
+        } catch (IndexOutOfBoundsException | NumberFormatException e) {
+            throw new BowlingScoreException(FRAME_NUMBER_ERROR);
+        }
     }
 
 }

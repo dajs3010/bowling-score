@@ -21,14 +21,14 @@ public class ParserDataService implements IParserDataService {
         this.validator = validator;
     }
 
-    private static final String WHITE_SPACE = " ";
+    private static final String TAB = "\\s+";
 
     public List<PlayerInputValues> getPlayersInputValues(final List<String> lines) throws InvalidScoreException {
 
         final Map<String, List<String>> shotsPerPlayer = new HashMap<>();
 
         for (String line : lines) {
-            String[] inputLine = line.split(WHITE_SPACE);
+            String[] inputLine = line.split(TAB);
             validator.validateLine(inputLine);
             final String player = inputLine[0];
             final String value = inputLine[1];

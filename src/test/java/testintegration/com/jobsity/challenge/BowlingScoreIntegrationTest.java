@@ -16,6 +16,7 @@ public class BowlingScoreIntegrationTest {
     private static final String JEFF_AND_JOHN_MATCH_FILE = "./scores/score.txt";
     private static final String PERFECT_SCORE_FILE = "./scores/perfect-score.txt";
     private static final String WORST_SCORE_FILE = "./scores/worst-score.txt";
+    private static final String INVALID_FRAMES_SCORE_FILE = "./scores/invalid-frames-score.txt";
 
     private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
@@ -65,6 +66,14 @@ public class BowlingScoreIntegrationTest {
         String[] splitOutContent = outContent.toString().split("\n");
         Assert.assertEquals(expectedWorstPinFalls, splitOutContent[3].trim());
         Assert.assertEquals(expectedWorstScore, splitOutContent[4].trim());
+    }
+
+    @Test
+    public void calculateInvalidFramesScore() {
+        final String[] strings = {INVALID_FRAMES_SCORE_FILE};
+        String expectedError = "Frames should be 10 per player";
+        App.main(strings);
+        Assert.assertEquals(expectedError, outContent.toString());
     }
 
 }

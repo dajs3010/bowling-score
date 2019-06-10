@@ -1,5 +1,6 @@
 package com.jobsity.challenge.service.Impl;
 
+import com.jobsity.challenge.exceptions.BowlingScoreException;
 import com.jobsity.challenge.model.PlayerInputValues;
 import com.jobsity.challenge.model.PlayerShots;
 import com.jobsity.challenge.model.Shot;
@@ -8,7 +9,9 @@ import com.jobsity.challenge.service.IValidator;
 import com.jobsity.challenge.service.impl.PlayerShotsMapper;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -33,10 +36,13 @@ public class PlayerShotsMapperTest {
         MockitoAnnotations.initMocks(this);
     }
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     private final static String PLAYER = "PLAYER";
 
     @Test
-    public void mapPlayerShots() {
+    public void mapPlayerShots_frameNumberIs10_returnPlayerShotsList() throws BowlingScoreException {
 
         final List<String> inputValues =
                 Arrays.asList("10", "7", "3", "9", "0", "10",
@@ -75,5 +81,33 @@ public class PlayerShotsMapperTest {
 
         Assert.assertEquals(expectedShots.getInputShots().toString(), playerShots.get(0).getInputShots().toString());
         Assert.assertEquals(expectedShots.getPlayer(), playerShots.get(0).getPlayer());
+    }
+
+    @Test
+    public void mapPlayerShots_frameNumberIs8_throwException() throws BowlingScoreException {
+        final List<String> inputValues =
+                Arrays.asList("10", "7", "3", "9", "0", "10",
+                        "0", "8", "8", "2", "F", "6",
+                        "10");
+        final PlayerInputValues playerInputValues =
+                PlayerInputValues.createPlayerInputValues(PLAYER, inputValues);
+
+        expectedException.expect(BowlingScoreException.class);
+
+        mapper.mapPlayerShots(Arrays.asList(playerInputValues));
+    }
+
+    @Test
+    public void mapPlayerShots_frameNumberIs9_throwException() throws BowlingScoreException {
+        final List<String> inputValues =
+                Arrays.asList("10", "7", "3", "9", "0", "10",
+                        "0", "8", "8", "2", "F", "6",
+                        "10", "10");
+        final PlayerInputValues playerInputValues =
+                PlayerInputValues.createPlayerInputValues(PLAYER, inputValues);
+
+        expectedException.expect(BowlingScoreException.class);
+
+        mapper.mapPlayerShots(Arrays.asList(playerInputValues));
     }
 }
